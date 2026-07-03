@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from flask import jsonify, request
 from marshmallow import ValidationError
-from app.models import Customer, Ticket, db
+from app.models import Customer, Mechanic, Ticket, db
 from .schemas import ticket_schema, tickets_schema
 from . import tickets_bp
 
@@ -31,6 +31,48 @@ def get_tickets():
     tickets = db.session.execute(query).scalars().all()
     
     return tickets_schema.jsonify(tickets)
+
+# ASSIGN MECHANIC TO TICKET
+@tickets_bp.route("/<int:ticket_id>/assign-mechanic/<int:mechanic_id>", methods=['PUT'])
+def assign_mechanic(ticket_id, mechanic_id):
+    ticket = db.session.get(Ticket, ticket_id)
+    if not ticket:
+        return jsonify({"error": "Ticket not found."}), 404
+    
+    mechanic = db.session.get(Mechanic, mechanic_id)
+    if not mechanic:
+        return jsonify({"error": "Mechanic not found."}), 404
+    
+    if mechanic in ticket.mechanics:
+        return jsonify({"error": "Mechanic already assigned to this ticket."}), 400
+    
+    ticket.mechanics.append(mechanic)
+    db.session.commit()
+    
+    return jsonify({
+        "message": f"Mechanic id: {mechanic_id}, assigned to ticket id: {ticket_id}."
+    }), 200
+
+# REMOVE MECHANIC FROM TICKET
+@tickets_bp.route("/<int:ticket_id>/remove-mechanic/<int:mechanic_id>", methods=['PUT'])
+def remove_mechanic(ticket_id, mechanic_id):
+    ticket = db.session.get(Ticket, ticket_id)
+    if not ticket:
+        return jsonify({"error": "Ticket not found."}), 404
+    
+    mechanic = db.session.get(Mechanic, mechanic_id)
+    if not mechanic:
+        return jsonify({"error": "Mechanic not found."}), 404
+    
+    if mechanic not in ticket.mechanics:
+        return jsonify({"error": "Mechanic is not assigned to this ticket."}), 400
+    
+    ticket.mechanics.remove(mechanic)
+    db.session.commit()
+    
+    return jsonify({
+        "message": f"Mechanic id: {mechanic_id}, removed from ticket id: {ticket_id}."
+    }), 200
 
 # GET SPECIFIC TICKET
 @tickets_bp.route("/<int:ticket_id>", methods=['GET'])
