@@ -4,8 +4,11 @@ venv/
 instance/
 .env
 .vscode/
+.gitignore
+.DS_Store
 
 scratch.txt
 ProjectGuidelines.txt
 Mechanic Shop ERD.json
 Mechanic Shop ERD.csv
+config_password.py

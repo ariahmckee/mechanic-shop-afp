@@ -1,7 +1,9 @@
 
-class DevelopementConfig:
-    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:d0ntShar3My1nf0@localhost/mechanic_db'
+class DevelopmentConfig:
+    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:<YOUR MYSQL PASSWORD>@localhost/<YOUR DATABASE>'
     DEBUG = True
+
+DevelopementConfig = DevelopmentConfig
     
 class TestingConfig:
     pass

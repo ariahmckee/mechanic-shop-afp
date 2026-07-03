@@ -1,12 +1,12 @@
 from app import create_app
 from app.models import db
 
-app = create_app('DevelopementConfig')
+app = create_app('DevelopmentConfig')
 
 
-# Create the table
-with app.app_context():
-    db.create_all()
-    
-    
-app.run()
+if __name__ == "__main__":
+    # Create the tables before starting the development server.
+    with app.app_context():
+        db.create_all()
+        
+    app.run()
