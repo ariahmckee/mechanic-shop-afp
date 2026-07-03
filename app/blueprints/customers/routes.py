@@ -1,13 +1,11 @@
 from sqlalchemy import select
 from flask import jsonify, request
-# from flask_sqlalchemy import SQLAlchemy
-# from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-
 from marshmallow import ValidationError
 from app.models import Customer, db
 from .schemas import customer_schema, customers_schema
 from . import customers_bp
 
+# CREATE NEW CUSTOMER
 @customers_bp.route("/", methods=['POST'])
 def create_customer():
     try:
